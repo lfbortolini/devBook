@@ -37,7 +37,7 @@ func (repositorio Usuarios) Criar(usuario modelos.Usuario) (uint64, error) {
 func (repositorio Usuarios) Buscar(nomeOuNick string) ([]modelos.Usuario, error) {
 	nomeOuNick = fmt.Sprintf("%%%s%%", nomeOuNick)
 
-	linhas, erro := repositorio.db.Query("select id, nome, email, nick, criadoEm from usuarios where nome like ? or nick like ?", nomeOuNick, nomeOuNick)
+	linhas, erro := repositorio.db.Query("select id, nome, nick, email, criadoEm from usuarios where nome like ? or nick like ?", nomeOuNick, nomeOuNick)
 	if erro != nil {
 		return nil, erro
 	}
@@ -60,7 +60,7 @@ func (repositorio Usuarios) Buscar(nomeOuNick string) ([]modelos.Usuario, error)
 }
 
 func (repositorio Usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
-	linhas, erro := repositorio.db.Query("select id, nome, email, nick, criadoEm from usuarios where id = ?", ID)
+	linhas, erro := repositorio.db.Query("select id, nome, nick, email, criadoEm from usuarios where id = ?", ID)
 	if erro != nil {
 		return modelos.Usuario{}, erro
 	}
@@ -85,6 +85,19 @@ func (repositorio Usuarios) Atualizar(ID uint64, usuario modelos.Usuario) error 
 
 	defer statement.Close()
 	if _, erro := statement.Exec(usuario.Nome, usuario.Nick, usuario.Email, ID); erro != nil {
+		return erro
+	}
+	return nil
+}
+
+func (repositorio Usuarios) Deletar(ID uint64) error {
+	statement, erro := repositorio.db.Prepare("delete from usuarios where id = ?")
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+	if _, erro := statement.Exec(ID); erro != nil {
 		return erro
 	}
 	return nil

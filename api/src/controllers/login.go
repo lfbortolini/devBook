@@ -8,7 +8,7 @@ import (
 	"api/src/respostas"
 	"api/src/seguranca"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -40,14 +40,21 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if usuarioSalvoNoBanco.ID <= 0 {
+		respostas.Erro(w, http.StatusInternalServerError, errors.New("Email inválido"))
+		return
+	}
+
 	if erro = seguranca.VerificarSenha(usuarioSalvoNoBanco.Senha, usuario.Senha); erro != nil {
 		respostas.Erro(w, http.StatusUnauthorized, erro)
 		return
 	}
 
 	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.ID)
-
-	fmt.Println(erro)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
 
 	w.Write([]byte(token))
 

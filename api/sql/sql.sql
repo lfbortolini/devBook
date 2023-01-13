@@ -16,7 +16,7 @@ CREATE TABLE usuarios
     email varchar
     (50) not null unique,
     senha varchar
-    (20) not null unique,
+    (100) not null unique,
     criadoEm timestamp default current_timestamp
     ()
 ) engine=innodb

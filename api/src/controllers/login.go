@@ -3,8 +3,8 @@ package controllers
 import (
 	"api/src/autenticacao"
 	"api/src/banco"
-	"api/src/modelos"
-	"api/src/repositorios"
+	"api/src/models"
+	"api/src/repository"
 	"api/src/respostas"
 	"api/src/seguranca"
 	"encoding/json"
@@ -20,7 +20,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var usuario modelos.Usuario
+	var usuario models.Usuario
 	if erro = json.Unmarshal(corpoRequest, &usuario); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -33,7 +33,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioUsuarios(db)
+	repositorio := repository.NovoRepositorioUsuarios(db)
 	usuarioSalvoNoBanco, erro := repositorio.BuscarPorEmail(usuario.Email)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -57,5 +57,4 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte(token))
-
 }

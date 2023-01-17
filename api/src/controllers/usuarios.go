@@ -3,8 +3,8 @@ package controllers
 import (
 	"api/src/autenticacao"
 	"api/src/banco"
-	"api/src/modelos"
-	"api/src/repositorios"
+	"api/src/models"
+	"api/src/repository"
 	"api/src/respostas"
 	"encoding/json"
 	"errors"
@@ -23,7 +23,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var usuario modelos.Usuario
+	var usuario models.Usuario
 	if erro = json.Unmarshal(corpoRequest, &usuario); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -41,7 +41,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioUsuarios(db)
+	repositorio := repository.NovoRepositorioUsuarios(db)
 	usuario.ID, erro = repositorio.Criar(usuario)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -61,7 +61,7 @@ func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioUsuarios(db)
+	repositorio := repository.NovoRepositorioUsuarios(db)
 	usuarios, erro := repositorio.Buscar(nomeOuNick)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -87,7 +87,7 @@ func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioUsuarios(db)
+	repositorio := repository.NovoRepositorioUsuarios(db)
 	usuario, erro := repositorio.BuscarPorID(usuarioID)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -122,7 +122,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var usuario modelos.Usuario
+	var usuario models.Usuario
 	if erro = json.Unmarshal(corpoRequest, &usuario); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -140,7 +140,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioUsuarios(db)
+	repositorio := repository.NovoRepositorioUsuarios(db)
 	erro = repositorio.Atualizar(usuarioID, usuario)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -176,9 +176,45 @@ func DeletarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioUsuarios(db)
+	repositorio := repository.NovoRepositorioUsuarios(db)
 	erro = repositorio.Deletar(usuarioID)
 	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusNoContent, nil)
+}
+
+func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+
+	seguidorID, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioID"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	if usuarioID == seguidorID {
+		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possivel seguir o mesmo usuário logado!"))
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repository.NovoRepositorioUsuarios(db)
+	if erro = repositorio.Seguir(usuarioID, seguidorID); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}

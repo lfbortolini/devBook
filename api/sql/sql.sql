@@ -19,7 +19,7 @@ CREATE TABLE seguidores(
     usuario_id int not null, FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     seguidor_id int not null, FOREIGN KEY (seguidor_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     primary key(usuario_id, seguidor_id)
-) engine=innodb
+) engine=innodb;
 
 CREATE TABLE publicacoes(
     id int auto_increment primary key,
@@ -28,4 +28,4 @@ CREATE TABLE publicacoes(
     autor_id int not null, FOREIGN KEY (autor_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     curtidas int,
     criadoEm timestamp default current_timestamp()
-) engine=innodb
+) engine=innodb;

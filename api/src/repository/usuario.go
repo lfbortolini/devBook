@@ -77,6 +77,22 @@ func (repositorio Usuarios) BuscarPorID(ID uint64) (models.Usuario, error) {
 	return usuario, nil
 }
 
+func (repositorio Usuarios) BuscarSenha(usuarioID uint64) (string, error) {
+	linhas, erro := repositorio.db.Query("select senha from usuarios where id = ?", usuarioID)
+	if erro != nil {
+		return "", erro
+	}
+	defer linhas.Close()
+
+	var usuario models.Usuario
+	if linhas.Next() {
+		if erro = linhas.Scan(&usuario.Senha); erro != nil {
+			return "", erro
+		}
+	}
+	return usuario.Senha, nil
+}
+
 func (repositorio Usuarios) BuscarPorEmail(email string) (models.Usuario, error) {
 	linha, erro := repositorio.db.Query("select id, senha from usuarios where email = ?", email)
 	if erro != nil {
@@ -197,4 +213,17 @@ func (repositorio Usuarios) BuscarSeguindo(usuarioID uint64) ([]models.Usuario, 
 	}
 
 	return usuarios, nil
+}
+
+func (repositorio Usuarios) AtualizarSenha(usuarioID uint64, senha string) error {
+	statement, erro := repositorio.db.Prepare("update usuarios set senha = ? where id = ?")
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+	if _, erro := statement.Exec(senha, usuarioID); erro != nil {
+		return erro
+	}
+	return nil
 }

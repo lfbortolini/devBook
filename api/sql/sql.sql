@@ -26,6 +26,6 @@ CREATE TABLE publicacoes(
     titulo varchar (50) not null,
     conteudo varchar (300) not null,
     autor_id int not null, FOREIGN KEY (autor_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    curtidas int,
+    curtidas int default 0,
     criadoEm timestamp default current_timestamp()
 ) engine=innodb;

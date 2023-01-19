@@ -19,19 +19,19 @@ var rotasPublicacoes = []Rota{
 		RequerAutentucacao: true,
 	},
 	{
-		URI:                "/publicacoes/{publicacaoId}",
+		URI:                "/publicacoes/{publicacaoID}",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.BuscarPublicacao,
 		RequerAutentucacao: true,
 	},
 	{
-		URI:                "/publicacoes/{publicacaoId}",
+		URI:                "/publicacoes/{publicacaoID}",
 		Metodo:             http.MethodPut,
 		Funcao:             controllers.AtualizarPublicacao,
 		RequerAutentucacao: true,
 	},
 	{
-		URI:                "/publicacoes/{publicacaoId}",
+		URI:                "/publicacoes/{publicacaoID}",
 		Metodo:             http.MethodDelete,
 		Funcao:             controllers.DeletarPublicacao,
 		RequerAutentucacao: true,

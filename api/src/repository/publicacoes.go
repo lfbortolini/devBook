@@ -81,3 +81,16 @@ func (repositorio Publicacoes) Buscar(usuarioID uint64) ([]models.Publicacao, er
 	}
 	return publicacoes, nil
 }
+
+func (repositorio Publicacoes) Atualizar(publicacaoID uint64, publicacao models.Publicacao) error {
+	statement, erro := repositorio.db.Prepare("update publicacoes set titulo = ?, conteudo = ? where id = ?")
+	if erro != nil {
+		return erro
+	}
+
+	defer statement.Close()
+	if _, erro := statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacaoID); erro != nil {
+		return erro
+	}
+	return nil
+}

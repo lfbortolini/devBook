@@ -8,3 +8,7 @@ import (
 func CarregarTelaDeLogin(w http.ResponseWriter, r *http.Request) {
 	utils.ExecutarTempalte(w, "login.html", nil)
 }
+
+func CarregarPaginaDeCadastroDeUsuario(w http.ResponseWriter, r *http.Request) {
+	utils.ExecutarTempalte(w, "cadastro.html", nil)
+}

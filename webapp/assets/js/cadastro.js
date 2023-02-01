@@ -4,7 +4,7 @@ function criarUsuario(evento) {
   evento.preventDefault();
   console.log("Testes");
 
-  if ($("#senha").val() != $("confirmar-senha").val()) {
+  if ($("#senha").val() != $("#confirmar-senha").val()) {
     alert("As senhas não são idênticas");
     return;
   }

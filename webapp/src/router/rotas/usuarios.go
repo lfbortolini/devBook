@@ -12,4 +12,10 @@ var rotasUsuarios = []Rota{
 		Funcao:             controllers.CarregarPaginaDeCadastroDeUsuario,
 		RequerAutentucacao: false,
 	},
+	{
+		URI:                "/usuarios",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.CriarUsuarios,
+		RequerAutentucacao: false,
+	},
 }

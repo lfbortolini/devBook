@@ -2,7 +2,6 @@ $("#formulario-cadastro").on("submit", criarUsuario);
 
 function criarUsuario(evento) {
   evento.preventDefault();
-  console.log("Testes");
 
   if ($("#senha").val() != $("#confirmar-senha").val()) {
     alert("As senhas não são idênticas");
@@ -18,5 +17,11 @@ function criarUsuario(evento) {
       nick: $("#nick").val(),
       senha: $("#senha").val(),
     },
-  });
+  })
+    .done(function () {
+      alert("Usuário cadastrado com sucesso.");
+    })
+    .fail(function (erro) {
+      alert("Erro ao cadastrar usuário." + erro.responseText);
+    });
 }

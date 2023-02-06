@@ -22,6 +22,12 @@ function criarUsuario(evento) {
       alert("Usuário cadastrado com sucesso.");
     })
     .fail(function (erro) {
-      alert("Erro ao cadastrar usuário." + erro.responseText);
+      console.log(erro);
+
+      if (erro.status >= 400) {
+        alert("Erro ao cadastrar usuário." + erro.responseText);
+      } else {
+        alert("Usuário cadastrado com sucesso.");
+      }
     });
 }

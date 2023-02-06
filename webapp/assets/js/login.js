@@ -15,6 +15,12 @@ function fazerLogin(evento) {
       window.location = "/home";
     })
     .fail(function (erro) {
-      alert("Falha ao realizar login" + erro.responseText);
+      console.log(erro);
+
+      if (erro.status >= 400) {
+        alert("Falha ao realizar login" + erro.responseText);
+      } else {
+        window.location = "/home";
+      }
     });
 }

@@ -12,4 +12,10 @@ var rotasPublicacoes = []Rota{
 		Funcao:             controllers.CriarPublicacao,
 		RequerAutentucacao: true,
 	},
+	{
+		URI:                "/publicacoes/{publicacaoId}/curtir",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.CurtirPublicacao,
+		RequerAutentucacao: true,
+	},
 }

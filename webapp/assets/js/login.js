@@ -15,12 +15,10 @@ function fazerLogin(evento) {
       window.location = "/home";
     })
     .fail(function (erro) {
-      console.log(erro);
-
-      if (erro.status >= 400) {
-        alert("Falha ao realizar login" + erro.responseText);
-      } else {
-        window.location = "/home";
-      }
+      Swal.fire(
+        "Opss...",
+        "Falha ao realizar login" + erro.responseText,
+        "error"
+      );
     });
 }

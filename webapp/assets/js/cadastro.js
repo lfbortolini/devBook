@@ -4,7 +4,7 @@ function criarUsuario(evento) {
   evento.preventDefault();
 
   if ($("#senha").val() != $("#confirmar-senha").val()) {
-    alert("As senhas não são idênticas");
+    Swal.fire("Opss...", "As senhas não são idênticas", "error");
     return;
   }
 
@@ -19,15 +19,26 @@ function criarUsuario(evento) {
     },
   })
     .done(function () {
-      alert("Usuário cadastrado com sucesso.");
+      Swal.fire("Sucesso", "Usuário cadastrado com sucesso.", "success").then(
+        function () {
+          $.ajax({
+            url: "/login",
+            method: "POST",
+            data: {
+              email: $("#email").val(),
+              senha: $("#senha").val(),
+            },
+          })
+            .done(function () {
+              window.location = "/home";
+            })
+            .fail(function () {
+              Swal.fire("Opss...", "Erro ao autenticar o usuário.", "error");
+            });
+        }
+      );
     })
     .fail(function (erro) {
-      console.log(erro);
-
-      if (erro.status >= 400) {
-        alert("Erro ao cadastrar usuário." + erro.responseText);
-      } else {
-        alert("Usuário cadastrado com sucesso.");
-      }
+      Swal.fire("Opss...", "Erro ao cadastrar usuário.", "error");
     });
 }

@@ -132,4 +132,6 @@ func CarregarPerfilDoUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	usuario, erro := models.BuscarUsuarioCompleto(usuarioID, r)
+
+	utils.ExecutarTempalte(w, "", usuario)
 }
